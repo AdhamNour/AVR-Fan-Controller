@@ -9,7 +9,7 @@
 
 #define ADC_MAX_VOLTAGE 2.56
 static ADC_ConfigType ADC_configType;
-static 	float64 factor = (MAX_TEMPERATURE*ADC_MAX_VOLTAGE)/(MAX_VOLTAGE*ADC_MAX_READING);
+static 	float64 factor = ((float64)MAX_TEMPERATURE*ADC_MAX_VOLTAGE)/((float64)MAX_VOLTAGE*ADC_MAX_READING);
 
 
 void LM35_init() {
@@ -20,7 +20,7 @@ void LM35_init() {
 	ADC_init(&ADC_configType);
 }
 
-uint8 LM35_readTemp() {
-	uint8 channelReading= ADC_readChannel(LM35_CHANNEL);
-	return (uint8)(factor * channelReading);
+uint16 LM35_readTemp() {
+	uint16 channelReading= ADC_readChannel(LM35_CHANNEL);
+	return (uint16)((uint32)(factor * channelReading));
 }

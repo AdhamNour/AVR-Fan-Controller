@@ -17,6 +17,6 @@
 
 void LM35_init();
 
-uint8 LM35_readTemp();
+uint16 LM35_readTemp();
 
 #endif /* HAL_LM35_LM35_H_ */

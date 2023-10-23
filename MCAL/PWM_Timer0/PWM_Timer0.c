@@ -13,7 +13,7 @@ void PWM_Timer0_Start(uint8 duty_cycle) {
 	 */
 	TCNT0 = 0; // Set Timer Initial Value to 0
 
-	OCR0 = (uint8)(((float32)duty_cycle/100)*256); //Set Compare value
+	OCR0 = (uint8)(((float32)duty_cycle/100)*255); //Set Compare value
 
 	DDRB = DDRB | (1 << PB3); // Configure PB3/OC0 as output pin --> pin where the PWM signal is generated from MC
 

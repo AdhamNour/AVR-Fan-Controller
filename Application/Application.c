@@ -19,11 +19,14 @@ static void Application_init();
 static void Application_splashScreen();
 static void Application_readTempreture();
 static void Application_printTempreture();
+static void Application_setFanStatus();
 static void Application_cotrolTheFan();
 
 static uint8 current_temp = 0;
 static uint8 tempreature_string[3];
 static uint8 displayString[16];
+static DCMotor_State dcMotorState = OFF;
+static uint8 dcMotorSpead = 0;
 
 void Application_Setup() {
 	static uint8 tempString[] = "Temp =     C";
@@ -39,6 +42,7 @@ void Application_Setup() {
 void Application_Loop() {
 	Application_readTempreture();
 	Application_printTempreture();
+	Application_setFanStatus();
 	Application_cotrolTheFan();
 
 }
@@ -73,14 +77,33 @@ static void Application_printTempreture() {
 }
 
 static void Application_cotrolTheFan() {
-	DcMotor_Rotate(OFF, 0);
-	if (current_temp >= 30)
-		DcMotor_Rotate(CW, 25);
-	if (current_temp >= 60)
-		DcMotor_Rotate(CW, 50);
-	if (current_temp >= 90)
-		DcMotor_Rotate(CW, 75);
-	if (current_temp >= 120)
-		DcMotor_Rotate(CW, 100);
+	LCD_displayStringRowColumn(0, 10, dcMotorState==OFF?"OFF":"ON ");
+	DcMotor_Rotate(dcMotorState, dcMotorSpead);
+}
 
+static void Application_setFanStatus() {
+	if (current_temp < 30) {
+		dcMotorSpead=0;
+		dcMotorState=OFF;
+	} else if (current_temp >= 30 && current_temp < 60) {
+		dcMotorSpead=25;
+		dcMotorState=CW;
+	}
+
+	else if (current_temp >= 60 && current_temp < 90) {
+		dcMotorSpead=50;
+				dcMotorState=CW;
+
+	} else if (current_temp >= 90 && current_temp < 120) {
+		dcMotorSpead=75;
+				dcMotorState=CW;
+
+	} else if (current_temp >= 120) {
+		dcMotorSpead=100;
+				dcMotorState=CW;
+
+	} else {
+		LCD_displayStringRowColumn(0, 10, "err");
+
+	}
 }
